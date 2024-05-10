@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.MVCProject.mapper.RiotMapper">
+
+	<select id="getApiKey" resultType="string">
+		SELECT APIKEY FROM APIKEYCODE ORDER BY CREATEDATE desc
+	</select>
+
+	<select id="getApiUrl" parameterType="map" resultType="string">
+		SELECT APIURL FROM RIOTAPIURL WHERE CODE = #{code}
+	</select>
+	
+</mapper>
