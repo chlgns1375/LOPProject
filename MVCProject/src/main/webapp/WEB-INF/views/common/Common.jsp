@@ -32,6 +32,5 @@
 			<sitemesh:write property='head'/>
 			<sitemesh:write property='body'/>
 		</section>
-		<jsp:include page="Bottom.jsp" />
 	</body>
 </html>

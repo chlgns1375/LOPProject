@@ -16,7 +16,7 @@ public interface RiotService {
 	
 	public ArrayList<String> getMatchIdListUrl(HashMap<String, Object> objMap) throws Exception;
 	
-	public HashMap<String, Object> getMatchInfoUrl(HashMap<String, Object> objMap, ArrayList<String> matchIdList) throws Exception;
+	public ArrayList<Object> getMatchInfoUrl(HashMap<String, Object> objMap, ArrayList<String> matchIdList) throws Exception;
 	
 	public ArrayList<Object>  getrecordInfoUrl(HashMap<String, Object> objMap) throws Exception;
 	

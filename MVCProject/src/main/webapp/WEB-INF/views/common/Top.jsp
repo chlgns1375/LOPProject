@@ -24,14 +24,12 @@
 	
 </script>
 <header>
-	<h1 onclick="backToHome(); return false;">LOP HEADER</h1>
+	<h1 onclick="backToHome(); return false;">LOP.GG</h1>
 	<div class="toolbar">
-		toolbar
+		toolbar(룬, 아이템, 챔피언분석, 통계, 랭킹, 패치노트 등등 )[TODO]
 	</div>
 	<div class="searchDiv">
-		<!-- sendRequest(url, type, datatype, sync, datas) -->
 		<input type="text" class="textBox" id="userNickName" onkeypress="enterkey(event);" placeholder="검색할 소환사명" />
 		<button class="buttonBox" onclick="searchNickName();">search</button>
-		searchDiv 검색박스
 	</div>
 </header>

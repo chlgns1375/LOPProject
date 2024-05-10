@@ -18,9 +18,10 @@ header {
     left: 0px;
     height: 100px;
     width: 100%;
-    background-color: red;
     text-align: center;
     line-height: 100px;
+    background: linear-gradient(0deg, rgb(61, 60, 60), black);
+    border-bottom:1px solid #68686e;
     z-index: 20;
 }
 
@@ -35,29 +36,32 @@ footer {
     left: 0px;
     height: 100px;
     width: 100%;
-    background-color: blue;
+    background: linear-gradient(0deg, black, rgb(61, 60, 60));
     text-align: center;
     line-height: 100px;
     z-index: 20;
-}
-
-.searchDiv {
-    text-align: right;
-    height: 50px;
-    line-height: 50px;
-    background-color: green;
-    padding-right: 20px;
-    padding-left: 20px;
 }
 
 .toolbar {
     text-align: center;
     height: 50px;
     line-height: 50px;
-    background-color: yellow;
     padding-right: 20px;
     padding-left: 20px;
+    background-color:rgb(61, 60, 60);
+    border-bottom:1px solid #68686e;
 }
+
+.searchDiv {
+    text-align: right;
+    height: 50px;
+    line-height: 50px;
+    padding-right: 20px;
+    padding-left: 20px;
+	width: 1080px;
+    margin: 0px auto;
+}
+
 
 .textBox {
     width: 500px;
@@ -265,13 +269,36 @@ aside a {
   padding: .4em 1em;
 }
 
-table{
-	
-}
-td{
-	border:1px solid white;
+#userInfo{
+	background-color:#222628;
+	border:1px solid #68686e;
 }
 
+#recordInfo{
+	background-color:#222628;
+	border:1px solid #68686e;
+}
+
+
 h1{
+	font-family: Georgia, "Times New Roman", serif;
 	cursor:pointer;
+}
+
+.LOPchampionRotation{
+	border:1px solid #68686e;
+	height:auto;
+	width:auto;
+	background-color:#222628;
+}
+.stylebackground{
+	background-color:#222628;
+}
+.display-flex {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.marginbottom{
+	margin-bottom:5px;
 }

@@ -143,8 +143,8 @@
 	</head>
 	<body>
 		<div class="bodyDiv">
-			<div class="LOPchampionRotation" id="LolChampionRotationInfo" style="color:white; background-color:orange; height:auto;">
-				<div id="LOPChampionRotationScription" style="margin-left:20px; margin-right:20px; background-color:#ff9900;">
+			<div class="LOPchampionRotation marginbottom" id="LolChampionRotationInfo">
+				<div id="LOPChampionRotationScription" style="margin-left:20px; margin-right:20px; ">
 					※금주의 로테이션 챔피언
 				</div>
 				<main>
@@ -152,8 +152,8 @@
 				</main>
 			</div>
 	
-			<div style="color:white; background-color:black;">
-				
+			<div class="marginbottom stylebackground" style="color:white;">
+				패치노트 내용관련 링크[TODO]
 			</div>
 		</div>
 	</body>

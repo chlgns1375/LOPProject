@@ -142,8 +142,9 @@ public class RiotServiceImpl implements RiotService{
 	}
 
 	@Override
-	public HashMap<String, Object> getMatchInfoUrl(HashMap<String, Object> objMap, ArrayList<String> matchIdList) throws Exception {
+	public ArrayList<Object> getMatchInfoUrl(HashMap<String, Object> objMap, ArrayList<String> matchIdList) throws Exception {
 		
+		ArrayList<Object> returnList = new ArrayList<Object>();
 		HashMap<String, Object> returnMap = new HashMap<String, Object>();
 		try {
 			String matchInfoCode = (String)objMap.get("code");
@@ -164,10 +165,12 @@ public class RiotServiceImpl implements RiotService{
 				while((line = in.readLine()) != null) { // response를 차례대로 출력
 					sb.append(line);
 				}
+				line = sb.toString();
+				returnMap = new ObjectMapper().readValue(line, new TypeReference<HashMap<String, Object>>(){});
 				
+				returnList.add(returnMap);
 			}
-			line = sb.toString();
-			returnMap = new ObjectMapper().readValue(line, new TypeReference<HashMap<String, Object>>(){});
+			
 			
 		} catch(Exception e) {
 			throw e;
@@ -176,7 +179,7 @@ public class RiotServiceImpl implements RiotService{
 			in.close();
 			sb.delete(0, sb.length() );
 		}
-		return returnMap;
+		return returnList;
 	}
 	
 	@Override

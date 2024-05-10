@@ -53,7 +53,7 @@ public class SearchManageController {
 			HashMap<String, Object> puuidMap = new HashMap<String, Object>(); //소환사에 대한 고유번호 정보
 			HashMap<String, Object> accountInfoMap = new HashMap<String, Object>(); //소환사에 대한 계정정보
 			ArrayList<String> matchIdList = new ArrayList<String>(); // 소환사의 경기 고유번호 정보
-			HashMap<String, Object> matchInfoMap = new HashMap<String, Object>(); // 소환사의 경기에 대한 정보
+			ArrayList<Object> matchInfoList = new ArrayList<Object>(); // 소환사의 경기에 대한 정보
 			ArrayList<Object> recordInfoList = new ArrayList<Object>(); // 소환사의 전체전적에 대한 정보
 			String[] summonerNameSplit = summonerName.replaceAll(" ",  "").split("-");
 			String nickName = summonerNameSplit[0];
@@ -74,12 +74,12 @@ public class SearchManageController {
 			objMap.replace("code", "2");
 			matchIdList = riotService.getMatchIdListUrl(objMap);
 			returnMap.put("matchIdList", matchIdList);
-			
+			/*
 			objMap.replace("code", "3");
 			objMap.put("matchIdList", matchIdList);
-			matchInfoMap = riotService.getMatchInfoUrl(objMap, matchIdList);
-			returnMap.put("matchInfoMap", matchInfoMap);
-			
+			matchInfoList = riotService.getMatchInfoUrl(objMap, matchIdList);
+			returnMap.put("matchInfoList", matchInfoList);
+			*/
 			objMap.replace("code", "4");
 			objMap.put("summonerId", accountInfoMap.get("id"));
 			recordInfoList = riotService.getrecordInfoUrl(objMap);
