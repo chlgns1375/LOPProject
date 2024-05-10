@@ -74,12 +74,12 @@ public class SearchManageController {
 			objMap.replace("code", "2");
 			matchIdList = riotService.getMatchIdListUrl(objMap);
 			returnMap.put("matchIdList", matchIdList);
-			/*
+			
 			objMap.replace("code", "3");
 			objMap.put("matchIdList", matchIdList);
 			matchInfoMap = riotService.getMatchInfoUrl(objMap, matchIdList);
 			returnMap.put("matchInfoMap", matchInfoMap);
-			*/
+			
 			objMap.replace("code", "4");
 			objMap.put("summonerId", accountInfoMap.get("id"));
 			recordInfoList = riotService.getrecordInfoUrl(objMap);
