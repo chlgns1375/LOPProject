@@ -10,7 +10,7 @@
 	const puuidMap = jsonObj.puuidMap;
 	const accountInfoMap = jsonObj.accountInfoMap;
 	const matchIdList = jsonObj.matchIdList;
-	const matchInfoMap = jsonObj.matchInfoMap;
+	const matchInfoList = jsonObj.matchInfoList;
 	const recordInfoList = jsonObj.recordInfoList;
 	$(document).ready(function() {
 		searchSommonerFunc();
@@ -61,18 +61,61 @@
 		
 		
 	}
-	
+	function searchedInGamePlayerInfoFunc(data) {
+		const participants = data.data.info.participants;
+		for(var playerNum in participants) {
+			if( participants[playerNum].puuid == puuidMap.puuid ) {
+				return participants[playerNum];
+			} else {
+				continue;
+			}
+		}
+	}
 	const columnDefs = [
-		{headerName:"승패", field:"win", width:100}, //true, false
-		{headerName:"챔피언", field:"champion", width:100},
-		{headerName:"KDA", field:"KDA", width:100},
-		{headerName:"큐타입", field:"queueType", width:100},
-		{headerName:"킬관여", field:"killasist", width:100},
-		{headerName:"SPELL/ROON", field:"sr", width:150, 
+		{headerName:"승패", field:"win", width:70,
 			valueFormatter: function (data) {
-				return (data.value).substr(0, 10);
+				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
+				return (searchedPlyerIngameInfo.win == true) ? "승" : "패";
+			}	
+		},
+		{headerName:"챔피언", field:"champion", width:90,
+			cellRenderer: function (data) {
+				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
+				const championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/img/champion/'+searchedPlyerIngameInfo.championName+'.png';
+				return "<span tooltip='" + searchedPlyerIngameInfo.championName + "' flow='down' ><img src="+championImgUrl+" class='imgCircleRadius' style='width:40px; cursor:pointer;'></span>";
+				//TODO:챔피언 툴팁이 나오지않음
 			}
 		},
+		{headerName:"큐타입", field:"mapId", width:150, 
+			valueFormatter: function (data) {
+				if(data.data.info.mapId == 11) {
+					return "랭크게임";
+				} else if(data.data.info.mapId == 12){
+					return "무작위 총력전";
+				} else if(data.data.info.mapId == 30){
+					return "아레나";
+				} else {
+					return data.data.info.mapId;
+				}
+				
+			}
+		},
+		{headerName:"KDA", field:"KDA", width:150,
+			valueFormatter: function (data) {
+				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
+				const searchedPlayerKills = searchedPlyerIngameInfo.kills;
+				const searchedPlayerAssists = searchedPlyerIngameInfo.assists;
+				const searchedPlayerDeaths = searchedPlyerIngameInfo.deaths;
+				const searchedPlayerTeamId = searchedPlyerIngameInfo.teamId;
+				const teams = data.data.info.teams;
+				const teamAllKillCount =
+					( teams[0].teamId == searchedPlayerTeamId ) ? teams[0].objectives.champion.kills : teams[1].objectives.champion.kills;
+				const searchedPlayerTeamKillsCount = searchedPlayerKills + searchedPlayerAssists;
+				const searchedPlayerInvolvement = Math.round( ( searchedPlayerTeamKillsCount / teamAllKillCount ) * 100 );
+				return searchedPlayerKills + " / " + searchedPlayerDeaths + " / " + searchedPlayerAssists + " " + searchedPlayerInvolvement + "%";
+			}
+		},
+		{headerName:"SPELL/ROON", field:"sr", width:150},
 		{headerName:"팀", field:"team", width:100},
 		{headerName:"아이템", field:"item", width:100},
 		{headerName:"LV/G/CS", field:"lvgcs", width:100},
@@ -81,12 +124,11 @@
 
 	const gridOptions = {
 		defaultColDef:{
-			sortable:true,
-			resizable:true
+			sortable:true
 		},
 		debug:true,
 		columnDefs:columnDefs,
-		rowData:jsonObj,
+		rowData:matchInfoList,
 		onGridReady:function(event){
 			event.api.sizeColumnsToFit();
 		}
@@ -146,7 +188,7 @@
 				</table>
 			</div>
 			<br/>
-			<div id="srRecord" style="width:50%;">
+			<div id="srRecord" style="width:50%; align-items:right;">
 				
 				<table id="srRecordTable">
 					<tr>
@@ -167,7 +209,7 @@
 				</table>
 			</div>
 		</div>
-		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 500px; width: 100%;"></div>
+		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 473px; width: 100%;"></div>
 	</div>
 </body>
 </html>

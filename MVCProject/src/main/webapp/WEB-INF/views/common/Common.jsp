@@ -10,7 +10,16 @@
 		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/style.css" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 		<script>
+			$(document).ready(function() {
+				getLolCurrentVersionFunc();
+			});
+			
 			var xhr = new XMLHttpRequest();
+
+			var lolCurrentVersionNumb = '';
+			var lolCurrentVersionUrl = 'https://ddragon.leagueoflegends.com/api/versions.json';
+			
+			let lolAllChampionsInfo = '';
 			
 			function backToHome() {
 				location.replace(location.origin);
@@ -20,10 +29,42 @@
 				location.replace(url);
 			}
 			
+
+			function getLolCurrentVersionFunc(){
+				//lolCurrentVersionUrl
+				$.ajax({
+					url : lolCurrentVersionUrl,
+					type : 'get',
+					dataType:'json',
+					async: false,
+					success : function(result){
+						lolCurrentVersionNumb = result[0];
+						getLolCurrentVersionAllChampionsFunc();
+					}, error : function(result) {
+						
+						
+					}
+				});
+			}
+			
+			//
+			function getLolCurrentVersionAllChampionsFunc() {
+				const getLolCurrentVersionAllChampionsUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/data/ko_KR/champion.json'
+				$.ajax({
+					url : getLolCurrentVersionAllChampionsUrl,
+					type : 'get',
+					dataType:'json',
+					async: false,
+					success : function(result){
+						lolAllChampionsInfo = result;
+					}, error : function(result) {
+						
+						
+					}
+				});
+			}
 			
 		</script>
-		
-		
 	</head>
 
 	<body>

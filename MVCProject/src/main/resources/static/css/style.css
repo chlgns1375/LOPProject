@@ -302,3 +302,7 @@ h1{
 .marginbottom{
 	margin-bottom:5px;
 }
+
+.imgCircleRadius{
+	border-radius:50%;
+}

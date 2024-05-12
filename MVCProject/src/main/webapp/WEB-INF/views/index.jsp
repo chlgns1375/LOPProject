@@ -1,23 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <html>
 	<head>
 		<title>Insert title here</title>
 		<script type="text/javascript">
-			
+	
 			let riotRotationApiCallUrl = '';
 			let riotRotationChampionsInfo = '';
-			let lolCurrentVersionNumb = '';
-			let lolCurrentVersionUrl = 'https://ddragon.leagueoflegends.com/api/versions.json';
-			let lolAllChampionsInfo = '';
+			
 			
 			$(document).ready(function() {
 				getApiKeyCodeFunc();
-				getLolCurrentVersionFunc();
 				getRotationChampionInfo();
 			});
-			
 			
 			function getApiKeyCodeFunc() {
 				$.ajax({
@@ -56,40 +51,6 @@
 				});
 			}
 			
-			function getLolCurrentVersionFunc(){
-				//lolCurrentVersionUrl
-				$.ajax({
-					url : lolCurrentVersionUrl,
-					type : 'get',
-					dataType:'json',
-					async: false,
-					success : function(result){
-						lolCurrentVersionNumb = result[0];
-						getLolCurrentVersionAlChampionsFunc();
-					}, error : function(result) {
-						
-						
-					}
-				});
-			}
-			
-			//
-			function getLolCurrentVersionAlChampionsFunc() {
-				const getLolCurrentVersionAlChampionsUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/data/ko_KR/champion.json'
-				$.ajax({
-					url : getLolCurrentVersionAlChampionsUrl,
-					type : 'get',
-					dataType:'json',
-					async: false,
-					success : function(result){
-						lolAllChampionsInfo = result;
-						
-					}, error : function(result) {
-						
-						
-					}
-				});
-			}
 			
 			function getRotationChampionInfo() {
 				// lolAllChampionsInfo //모든 챔피언에 대한 정보

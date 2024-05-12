@@ -113,7 +113,7 @@ public class RiotServiceImpl implements RiotService{
 		ArrayList<String> returnList = new ArrayList<String>();
 		try {
 			String matchIdListCode = (String)objMap.get("code");
-			String urlStr = riotMapper.getApiUrl(matchIdListCode) + objMap.get("puuid") + "/ids?api_key=" + objMap.get("apiKey") + "&start=" + 0 + "&end=" + 20;
+			String urlStr = riotMapper.getApiUrl(matchIdListCode) + objMap.get("puuid") + "/ids?api_key=" + objMap.get("apiKey") + "&start=" + 0 + "&count=" + 10;
 			
 			logger.info("Riot API URL : " + urlStr);
 			
