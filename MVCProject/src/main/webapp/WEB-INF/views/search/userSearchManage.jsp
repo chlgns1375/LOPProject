@@ -72,26 +72,18 @@
 		}
 	}
 	const columnDefs = [
-		{headerName:"승패", field:"win", width:70,
+		{headerName:"승패", field:"win", width:70, type: "centerAligned", pinned:null,
 			valueFormatter: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				return (searchedPlyerIngameInfo.win == true) ? "승" : "패";
 			}	
 		},
-		{headerName:"챔피언", field:"champion", width:90,
-			cellRenderer: function (data) {
-				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
-				const championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/img/champion/'+searchedPlyerIngameInfo.championName+'.png';
-				return "<span tooltip='" + searchedPlyerIngameInfo.championName + "' flow='down' ><img src="+championImgUrl+" class='imgCircleRadius' style='width:40px; cursor:pointer;'></span>";
-				//TODO:챔피언 툴팁이 나오지않음
-			}
-		},
-		{headerName:"큐타입", field:"mapId", width:150, 
+		{headerName:"큐타입", field:"mapId", width:100, 
 			valueFormatter: function (data) {
 				if(data.data.info.mapId == 11) {
-					return "랭크게임";
+					return "랭크";
 				} else if(data.data.info.mapId == 12){
-					return "무작위 총력전";
+					return "총력전";
 				} else if(data.data.info.mapId == 30){
 					return "아레나";
 				} else {
@@ -100,7 +92,21 @@
 				
 			}
 		},
-		{headerName:"KDA", field:"KDA", width:150,
+		{headerName:"챔피언", field:"champion", width:100, textAlign:"left",
+			cellRenderer: function (data) {
+				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
+				let championName = searchedPlyerIngameInfo.championName;
+				var championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/img/champion/'+championName+'.png';
+				//return "<span tooltip='" + searchedPlyerIngameInfo.championName + "' flow='down' ><img src="+championImgUrl+" class='imgCircleRadius' style='width:40px; cursor:pointer;'></span>";
+				return "<img onclick=\"redirectUrl(\'/Champion/ChampionInfo?championInfo=" + championName + "\' );\" src="+championImgUrl+" class='imgCircleRadius' style='width:60px; cursor:pointer;'>";
+			},
+			tooltipValueGetter: function (data) {
+				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
+				return lolAllChampionsInfo.data[searchedPlyerIngameInfo.championName].name;
+			},
+		},
+		{headerName:"SPELL/ROON", field:"sr", width:150},
+		{headerName:"KDA", field:"KDA", width:230,
 			valueFormatter: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				const searchedPlayerKills = searchedPlyerIngameInfo.kills;
@@ -112,23 +118,54 @@
 					( teams[0].teamId == searchedPlayerTeamId ) ? teams[0].objectives.champion.kills : teams[1].objectives.champion.kills;
 				const searchedPlayerTeamKillsCount = searchedPlayerKills + searchedPlayerAssists;
 				const searchedPlayerInvolvement = Math.round( ( searchedPlayerTeamKillsCount / teamAllKillCount ) * 100 );
-				return searchedPlayerKills + " / " + searchedPlayerDeaths + " / " + searchedPlayerAssists + " " + searchedPlayerInvolvement + "%";
+				if( data.data.info.mapId == 30) {
+					return searchedPlayerKills + " / " + searchedPlayerDeaths + " / " + searchedPlayerAssists;
+				} else {
+					return searchedPlayerKills + " / " + searchedPlayerDeaths + " / " + searchedPlayerAssists + " (" + searchedPlayerInvolvement + "%) KDA : " + (searchedPlyerIngameInfo.challenges.kda).toFixed(2);
+				}
+				
 			}
 		},
-		{headerName:"SPELL/ROON", field:"sr", width:150},
 		{headerName:"팀", field:"team", width:100},
-		{headerName:"아이템", field:"item", width:100},
-		{headerName:"LV/G/CS", field:"lvgcs", width:100},
-		{headerName:"플레이타임", field:"playtime", width:120}
+		{headerName:"아이템", field:"item", width:170, 
+			cellRenderer: function (data) {
+				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
+				let resultData = '';
+				for(let i = 0; searchedPlyerIngameInfo['item'+i] != undefined; i++) {
+					const itemNumb = searchedPlyerIngameInfo['item'+i];
+					const itemInfoUrl = 'https://ddragon.leagueoflegends.com/cdn/14.9.1/img/item/'+itemNumb+'.png';
+					const itemTag = "<img src="+itemInfoUrl+" style='width:25px; cursor:pointer;'> ";
+					if(i == 3) {
+						resultData += "<br/>"
+					}
+					resultData += itemTag;
+				}
+				
+				return resultData;
+			}
+		},
+		{headerName:"LV/G/CS", field:"lvgcs", width:130, 
+			valueFormatter: function (data) {
+				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
+				const searchedPlaerIngameChampLv = searchedPlyerIngameInfo.champLevel;
+				const searchedPlaerIngamePlayerGold = searchedPlyerIngameInfo.goldEarned;
+				const searchedPlaerIngamePlayerTotalMinionKilled = searchedPlyerIngameInfo.totalMinionsKilled;
+				return searchedPlaerIngameChampLv + " / " + searchedPlaerIngamePlayerGold + " / " + searchedPlaerIngamePlayerTotalMinionKilled;
+			}
+		},
+		{headerName:"플레이타임", field:"playtime", width:100}
 	];
 
 	const gridOptions = {
 		defaultColDef:{
-			sortable:true
+			resizable: false
 		},
-		debug:true,
+		rowHeight: 70, // 셀높이
 		columnDefs:columnDefs,
-		rowData:matchInfoList,
+		rowData:matchInfoList, //렌더링될 데이터
+		tooltipShowDelay: 500, //툴팁표시 딜레이시간
+		tooltipMouseTrack:true, //커서이동시 툴팁 따라옴
+		enableSorting:true,
 		onGridReady:function(event){
 			event.api.sizeColumnsToFit();
 		}
@@ -209,7 +246,7 @@
 				</table>
 			</div>
 		</div>
-		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 473px; width: 100%;"></div>
+		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 1000px; width: 100%;"></div>
 	</div>
 </body>
 </html>

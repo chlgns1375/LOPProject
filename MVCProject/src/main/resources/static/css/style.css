@@ -16,7 +16,7 @@ header {
     position: fixed;
     top: 0px;
     left: 0px;
-    height: 100px;
+    height: 99px;
     width: 100%;
     text-align: center;
     line-height: 100px;
@@ -305,4 +305,7 @@ h1{
 
 .imgCircleRadius{
 	border-radius:50%;
+}
+.ag-header-cell-label {
+	justify-content: center; 
 }
