@@ -289,7 +289,6 @@ h1{
 	border:1px solid #68686e;
 	height:auto;
 	width:auto;
-	background-color:#222628;
 }
 .stylebackground{
 	background-color:#222628;
@@ -308,4 +307,9 @@ h1{
 }
 .ag-header-cell-label {
 	justify-content: center; 
+}
+
+.ag-row .ag-cell {
+	display: flex;
+	align-items: center;
 }

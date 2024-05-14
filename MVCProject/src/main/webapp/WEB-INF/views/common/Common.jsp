@@ -13,10 +13,13 @@
 			
 			var xhr = new XMLHttpRequest();
 
-			var lolCurrentVersionNumb = '';
-			var lolCurrentVersionUrl = 'https://ddragon.leagueoflegends.com/api/versions.json';
+			const lolCurrentVersionUrl = 'https://ddragon.leagueoflegends.com/api/versions.json';
+			let lolCurrentVersionNumb = '';
+			let lolAllVersionInfo;
 			
 			let lolAllChampionsInfo = '';
+			let lolAllItemsInfo = '';
+			
 			
 			getLolCurrentVersionFunc();
 			
@@ -38,7 +41,9 @@
 					async: false,
 					success : function(result){
 						lolCurrentVersionNumb = result[0];
+						lolAllVersionInfo = result;
 						getLolCurrentVersionAllChampionsFunc();
+						getLolCurrentVersionAllItemsFunc();
 					}, error : function(result) {
 						
 						
@@ -56,6 +61,23 @@
 					async: false,
 					success : function(result){
 						lolAllChampionsInfo = result;
+					}, error : function(result) {
+						
+						
+					}
+				});
+			}
+			
+			//
+			function getLolCurrentVersionAllItemsFunc() {
+				const getLolCurrentVersionAllItemsUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/data/ko_KR/item.json'
+				$.ajax({
+					url : getLolCurrentVersionAllItemsUrl,
+					type : 'get',
+					dataType:'json',
+					async: false,
+					success : function(result){
+						lolAllItemsInfo = result;
 					}, error : function(result) {
 						
 						

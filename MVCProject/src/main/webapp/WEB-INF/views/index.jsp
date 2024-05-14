@@ -11,7 +11,8 @@
 			
 			$(document).ready(function() {
 				getApiKeyCodeFunc();
-				getRotationChampionInfo();
+				getRotationChampionInfoFunc();
+				getPatchNotesInfoFunc();
 			});
 			
 			function getApiKeyCodeFunc() {
@@ -52,7 +53,7 @@
 			}
 			
 			
-			function getRotationChampionInfo() {
+			function getRotationChampionInfoFunc() {
 				// lolAllChampionsInfo //모든 챔피언에 대한 정보
 				// riotRotationChampionsInfo.freeChampionIds //로테이션 챔피언 키
 				var rotationChampion= new Array;
@@ -100,21 +101,38 @@
 					}
 				}
 			}
+			//https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-14-9-notes/
+			// href="https://www.freecodecamp.org/" target="_blank"
+			function getPatchNotesInfoFunc() {
+				let lolVersionSplitDot;
+				let htmlLolVersionResult = '';
+				for(var i = 0; i < 5; i++) {
+					lolVersionSplitDot = lolAllVersionInfo[i].split('.');
+					htmlLolVersionResult += "<span><a href='https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-"
+					+ lolVersionSplitDot[0] + "-" + lolVersionSplitDot[1]
+					+ "-notes/'  target='_blank' style='color:white;'>"
+					+ lolAllVersionInfo[i] + " 패치노트</a></span><br/>"
+				}
+				$("#LOPPatchNoteInfo").html(htmlLolVersionResult);
+			}
 		</script>
 	</head>
 	<body>
 		<div class="bodyDiv">
-			<div class="LOPchampionRotation marginbottom" id="LolChampionRotationInfo">
+			<div class="LOPchampionRotation marginbottom stylebackground" id="LolChampionRotationInfo">
 				<div id="LOPChampionRotationScription" style="margin-left:20px; margin-right:20px; ">
 					※금주의 로테이션 챔피언
 				</div>
-				<main>
 				<div id="LOPChampionRotationInfo" style="margin-left:20px; margin-right:20px; "></div>
-				</main>
 			</div>
 	
-			<div class="marginbottom stylebackground" style="color:white;">
-				패치노트 내용관련 링크[TODO]
+			<div class="marginbottom stylebackground">
+				<div style="margin-left:20px; margin-right:20px;">
+					※패치노트
+				</div>
+				<div id="LOPPatchNoteInfo" style="margin-left:20px; margin-right:20px; ">
+					
+				</div>
 			</div>
 		</div>
 	</body>
