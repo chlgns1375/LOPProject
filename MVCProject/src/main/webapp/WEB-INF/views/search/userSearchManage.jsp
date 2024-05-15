@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,13 +72,29 @@
 		}
 	}
 	const columnDefs = [
-		{headerName:"승패", field:"win", width:70,
+		{headerName:"승패", field:"win", width:70, sortable:false,
+			cellStyle: function(data) {
+				return {
+					"justify-content": "center", 
+					"align-content": "center",
+					"align-items": "center",
+					"align-self": "center"
+				};
+			},
 			valueFormatter: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				return (searchedPlyerIngameInfo.win == true) ? "승" : "패";
 			}	
 		},
-		{headerName:"큐타입", field:"mapId", width:100, 
+		{headerName:"큐타입", field:"mapId", width:80, sortable:false,
+			cellStyle: function(data) {
+				return {
+					"justify-content": "center", 
+					"align-content": "center",
+					"align-items": "center",
+					"align-self": "center"
+				};
+			},
 			valueFormatter: function (data) {
 				if(data.data.info.mapId == 11) {
 					return "랭크";
@@ -92,7 +108,15 @@
 				
 			}
 		},
-		{headerName:"챔피언", field:"champion", width:100,
+		{headerName:"챔피언", field:"champion", width:80, sortable:false,
+			cellStyle: function(data) {
+				return {
+					"justify-content": "center", 
+					"align-content": "center",
+					"align-items": "center",
+					"align-self": "center"
+				};
+			},
 			cellRenderer: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				let championName = searchedPlyerIngameInfo.championName;
@@ -105,8 +129,16 @@
 				return lolAllChampionsInfo.data[searchedPlyerIngameInfo.championName].name;
 			},
 		},
-		{headerName:"SR", field:"sr", width:100},
-		{headerName:"KDA", field:"KDA", width:170,
+		{headerName:"SR", field:"sr", width:60, sortable:false},
+		{headerName:"KDA", field:"KDA", width:120, sortable:false,
+			cellStyle: function(data) {
+				return {
+					"justify-content": "center", 
+					"align-content": "center",
+					"align-items": "center",
+					"align-self": "center"
+				};
+			},
 			cellRenderer: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				const searchedPlayerKills = searchedPlyerIngameInfo.kills;
@@ -126,7 +158,7 @@
 				
 			}
 		},
-		{headerName:"팀", field:"team", width:200,
+		{headerName:"팀", field:"team", width:200, sortable:false,
 			cellRenderer: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				const searchedPlayerteamId = searchedPlyerIngameInfo.teamId
@@ -134,21 +166,42 @@
 				let resultData = '';
 				let championImgUrl = '';
 				
-				for(var i = 0; i < participantsTeam.length; i++) {
-					if(participantsTeam[i].teamId == searchedPlayerteamId) {
-						championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/' + lolCurrentVersionNumb + '/img/champion/'+participantsTeam[i].championName + '.png';
-						resultData += "<span tooltip='" + lolAllChampionsInfo.data[participantsTeam[i].championName].name + "' flow='down' ><img src="+championImgUrl + " style='width:16px; cursor:pointer;'></span>";
-						resultData += "<span tooltip='" + participantsTeam[i].riotIdGameName + "#" + participantsTeam[i].riotIdTagline+"' flow='down'>" + participantsTeam[i].riotIdGameName + "</span><br/>";
-					} else {
-						continue; //검색된 소환사와 다른팀일 경우
-					}
-					
-				}
+				let winTeamTag = "<div style='float:left; box-sizing:border-box; width:50%;'>";
+				let lossTeamTag = "<div style='float:right; box-sizing:border-box; width:50%;'>";
+				let htmlInfo = "";
 				
+				for(var i = 0; i < participantsTeam.length; i++) {
+					championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/' + lolCurrentVersionNumb + '/img/champion/'+participantsTeam[i].championName + '.png';
+					htmlInfo += "<span tooltip='" + lolAllChampionsInfo.data[participantsTeam[i].championName].name
+						+ "' flow='down' ><img src='"+championImgUrl + "' style='width:16px; cursor:pointer;'></span>";
+					//TODO: (lolAllChampionsInfo.data[champName].name : 'Fiddlestick') != (participantsTeam[i].name : 'FiddleStick')
+					htmlInfo += "<span onclick=redirectUrl('/search/userSearchManage?summonerName="+ participantsTeam[i].riotIdGameName.replaceAll(' ', '') + 
+						"-" + participantsTeam[i].riotIdTagline.replaceAll(' ', '') + "'); tooltip='" + participantsTeam[i].riotIdGameName + "#" + participantsTeam[i].riotIdTagline + 
+						"' flow='down' style='cursor:pointer;'>" + participantsTeam[i].riotIdGameName + "</span><br/>";
+						
+					if(participantsTeam[i].teamId == searchedPlayerteamId) {
+						winTeamTag += htmlInfo;
+					} else {
+						lossTeamTag += htmlInfo;
+					}
+					htmlInfo = "";
+				}
+				winTeamTag += "</div>";
+				lossTeamTag += "</div>";
+				
+				resultData = winTeamTag + lossTeamTag;
 				return resultData;
 			}
 		},
-		{headerName:"아이템", field:"item", width:170, 
+		{headerName:"아이템", field:"item", width:120, sortable:false,
+			cellStyle: function(data) {
+				return {
+					"justify-content": "center", 
+					"align-content": "center",
+					"align-items": "center",
+					"align-self": "center"
+				};
+			},
 			cellRenderer: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				let resultData = '';
@@ -158,19 +211,28 @@
 						const itemImgUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/img/item/'+itemNumb+'.png';
 						constitemInfoUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/data/ko_KR/item.json'
 						const itemTag = "<span tooltip='"+lolAllItemsInfo.data[itemNumb].name+"' flow='down'><img src="+itemImgUrl+" style='width:25px; cursor:pointer;'></span> ";
-						if(i == 3) {
-							resultData += "<br/>"
-						}
 						resultData += itemTag;
 					} else {
-						resultData += "<img style='width:25px; height:25px; background-color:black;'> ";
+						resultData += "<img style='width:25px; height:25px; background-color:#181d1f'> ";
+					}
+					
+					if(i == 2) {
+						resultData += "<br/>"
 					}
 				}
 				
 				return resultData;
 			}
 		},
-		{headerName:"LV/G/CS", field:"lvgcs", width:150, 
+		{headerName:"LV/G/CS", field:"lvgcs", width:100, sortable:false,
+			cellStyle: function(data) {
+				return {
+					"justify-content": "center", 
+					"align-content": "center",
+					"align-items": "center",
+					"align-self": "center"
+				};
+			},
 			valueFormatter: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				const searchedPlaerIngameChampLv = searchedPlyerIngameInfo.champLevel;
@@ -179,12 +241,33 @@
 				return searchedPlaerIngameChampLv + " / " + searchedPlaerIngamePlayerGold + " / " + searchedPlaerIngamePlayerTotalMinionKilled;
 			}
 		},
-		{headerName:"플레이타임", field:"playtime", width:130,
-			valueFormatter: function (data) {
-				let getTime = data.data.info.gameEndTimestamp - data.data.info.gameStartTimestamp;
+		{headerName:"시간", field:"playtime", width:150, sortable:false,
+			cellStyle: function(data) {
+				return {
+					"justify-content": "center", 
+					"align-content": "center",
+					"align-items": "center",
+					"align-self": "center"
+				};
+			},
+			cellRenderer: function (data) {
+				const getTime = data.data.info.gameEndTimestamp - data.data.info.gameStartTimestamp;
 				const setPlayedMinutes = new Date(getTime).getMinutes();
 				const setPlayedSeconds = new Date(getTime).getSeconds();
-				return setPlayedMinutes + " 분 " + setPlayedSeconds + " 초"
+				
+				const startTime = data.data.info.gameStartTimestamp;
+				const setstartPlayedYear = new Date(startTime).getFullYear();
+				const setstartPlayedMonth = new Date(startTime).getMonth();
+				const setstartPlayedDay = new Date(startTime).getDate();
+				const setstartPlayedHours = new Date(startTime).getHours();
+				const setstartPlayedMinutes = new Date(startTime).getMinutes();
+				const setstartPlayedSeconds = new Date(startTime).getSeconds();
+				
+				return "플레이 시간 : " + setPlayedMinutes + "분 " + setPlayedSeconds + "초<br/>"
+					+ setstartPlayedYear + "년 " + (setstartPlayedMonth + 1) + "월 " + setstartPlayedDay + "일 "
+					+ setstartPlayedHours + "시 ";
+					
+				
 			}
 		}
 	];
@@ -193,12 +276,19 @@
 		defaultColDef:{
 			resizable: false
 		},
-		rowHeight: 200, // 셀높이
+		rowHeight: 100, // 셀높이
 		columnDefs:columnDefs,
 		rowData:matchInfoList, //렌더링될 데이터
-		tooltipShowDelay: 500, //툴팁표시 딜레이시간
+		tooltipShowDelay: 100, //툴팁표시 딜레이시간
 		tooltipMouseTrack:true, //커서이동시 툴팁 따라옴
-		enableSorting:true,
+		onCellClicked:false,
+		getRowStyle: params => {
+	        if (searchedInGamePlayerInfoFunc(params.node).win == false) {
+	            return { background: '#59343B' };
+			} else {
+				return { background: '#181d1f'};
+			}
+		},
 		onGridReady:function(event){
 			event.api.sizeColumnsToFit();
 		}
@@ -218,68 +308,63 @@
 		<div id="userInfo" class="marginbottom">
 			<table>
 				<tr>
-					<td rowspan=3>
-						<img id="profileIconImg" style="width:128px; height:128px;">
-					</td>
-					<td>
-						시즌별 마감 티어[TODO]
-					</td>
+					<td rowspan=3><img id="profileIconImg"
+						style="width: 128px; height: 128px;"></td>
+					<td>시즌별 마감 티어[TODO]</td>
 				</tr>
 				<tr>
-					<td>
-						<span id="gameName"></span> #<span id="tagName"></span>
-					</td>
+					<td><span id="gameName"></span> #<span id="tagName"></span></td>
 				</tr>
 				<tr>
-					<td>
-						전체 랭킹 순위(상위 %)[TODO]
-					</td>
+					<td>전체 랭킹 순위(상위 %)[TODO]</td>
 				</tr>
 			</table>
 		</div>
 		<div id="recordInfo" class="display-flex marginbottom">
-			<div id="soloRecord" style="width:50%;">
+			<div id="soloRecord" style="width: 50%;">
 				<table id="soloRecordTable">
 					<tr>
-						<td style="text-align:center;" rowspan=4><img id="solotierImg"></td>
-						<td style="text-align:center;">솔로랭크</td>
+						<td style="text-align: center;" rowspan=4><img
+							id="solotierImg"></td>
+						<td style="text-align: center;">솔로랭크</td>
 					</tr>
 					<tr>
-						<td>
-							<span id="solowins"></span>승 <span id="sololosses"></span>패 (<span id="soloodds"></span>%)
-						</td>
+						<td><span id="solowins"></span>승 <span id="sololosses"></span>패
+							(<span id="soloodds"></span>%)</td>
 					</tr>
 					<tr>
-						<td style="text-align:center;"><span id="solotierWord"></span> <span id="solotierRank"></span></td>
+						<td style="text-align: center;"><span id="solotierWord"></span>
+							<span id="solotierRank"></span></td>
 					</tr>
 					<tr>
-						<td style="text-align:center;"><span id="solotierLp"></span>LP</td>
+						<td style="text-align: center;"><span id="solotierLp"></span>LP</td>
 					</tr>
 				</table>
 			</div>
-			<br/>
-			<div id="srRecord" style="width:50%; align-items:right;">
-				
+			<br />
+			<div id="srRecord" style="width: 50%; align-items: right;">
+
 				<table id="srRecordTable">
 					<tr>
-						<td style="text-align:center;" rowspan=4><img id="srtierImg"></td>
-						<td style="text-align:center;">자유랭크</td>
+						<td style="text-align: center;" rowspan=4><img id="srtierImg"></td>
+						<td style="text-align: center;">자유랭크</td>
 					</tr>
 					<tr>
-						<td>
-							<span id="srwins"></span>승 <span id="srlosses"></span>패 (<span id="srodds"></span>%)
-						</td>
+						<td><span id="srwins"></span>승 <span id="srlosses"></span>패
+						(<span id="srodds"></span>%)</td>
 					</tr>
 					<tr>
-						<td style="text-align:center;"><span id="srtierWord"></span> <span id="srtierRank"></span></td>
+						<td style="text-align: center;"><span id="srtierWord"></span>
+							<span id="srtierRank"></span></td>
 					</tr>
 					<tr>
-						<td style="text-align:center;"><span id="srtierLp"></span> LP</td>
+						<td style="text-align: center;"><span id="srtierLp"></span>LP</td>
 					</tr>
 				</table>
 			</div>
 		</div>
-		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 2051px; width: 100%;"></div>
+		<div id="myGrid" class="ag-theme-alpine-dark"
+			style="height: 1052px; width: 100%;"></div>
 	</div>
 </body>
 </html>

@@ -308,8 +308,16 @@ h1{
 .ag-header-cell-label {
 	justify-content: center; 
 }
+.ag-cell, .ag-full-width-row .ag-cell-wrapper.ag-row-group {
+	display:flex;
+	--ag-internal-calculated-line-height: none;
+	--ag-internal-padded-row-height: none;
+	padding-left: 0;
+	padding-right: 0;
+	-webkit-font-smoothing: subpixel-antialiased;
+	
+}
 
-.ag-row .ag-cell {
-	display: flex;
-	align-items: center;
+.ag-cell-value, .ag-group-value {
+	overflow: unset;
 }

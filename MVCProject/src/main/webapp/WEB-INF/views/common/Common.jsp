@@ -61,6 +61,7 @@
 					async: false,
 					success : function(result){
 						lolAllChampionsInfo = result;
+						
 					}, error : function(result) {
 						
 						
