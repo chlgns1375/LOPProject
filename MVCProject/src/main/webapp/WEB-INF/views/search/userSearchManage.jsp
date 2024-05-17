@@ -73,7 +73,7 @@
 		}
 	}
 	const columnDefs = [
-		{headerName:"승패", field:"win", width:55, sortable:false,
+		{headerName:"승패", field:"win", width:50, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -87,7 +87,7 @@
 				return (searchedPlyerIngameInfo.win == true) ? "승" : "패";
 			}	
 		},
-		{headerName:"큐타입", field:"mapId", width:70, sortable:false,
+		{headerName:"큐타입", field:"mapId", width:60, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -109,7 +109,7 @@
 				
 			}
 		},
-		{headerName:"챔피언", field:"champion", width:70, sortable:false,
+		{headerName:"챔피언", field:"champion", width:60, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -121,7 +121,7 @@
 			cellRenderer: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				const championName = toCapitalize(searchedPlyerIngameInfo.championName);
-				var championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/img/champion/'+championName+'.png';
+				const championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/img/champion/'+championName+'.png';
 				//return "<span tooltip='" + searchedPlyerIngameInfo.championName + "' flow='down' ><img src="+championImgUrl+" class='imgCircleRadius' style='width:40px; cursor:pointer;'></span>";
 				return "<img onclick=\"redirectUrl(\'/Champion/ChampionInfo?championInfo=" + championName + "\' );\" src="+championImgUrl+" class='imgCircleRadius' style='width:50px; cursor:pointer;'>";
 			},
@@ -131,8 +131,43 @@
 				return lolAllChampionsInfo.data[championName].name;
 			},
 		},
-		{headerName:"SR", field:"sr", width:60, sortable:false},
-		{headerName:"KDA", field:"KDA", width:100, sortable:false,
+		{headerName:"SR", field:"sr", width:50, sortable:false,
+			cellStyle: function(data) {
+				return {
+					"justify-content": "center", 
+					"align-content": "center",
+					"align-items": "center",
+					"align-self": "center"
+				};
+			},
+			cellRenderer: function (data) {
+				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
+				const searchedPlayerSpell1 = searchedPlyerIngameInfo.summoner1Id;
+				const searchedPlayerSpell2 = searchedPlyerIngameInfo.summoner2Id;
+				// https://ddragon.leagueoflegends.com/cdn/14.10.1/data/ko_KR/summoner.json
+				
+				const matchVersionInfoSplit = (data.data.info.gameVersion).split('.');
+				const matchVersionInfo = matchVersionInfoSplit[0] + '.' + matchVersionInfoSplit[1] + '.' + '1';
+				const spellsJson = getLolAllSpellsFunc(matchVersionInfo);
+				let getSpellData1 = '';
+				let getSpellData2 = '';
+				
+				$.each(spellsJson.data, function(key, value){
+					if( value.key == searchedPlayerSpell1 ) {
+						const searchedPlayerSpell1ImgUrl = "https://ddragon.leagueoflegends.com/cdn/"+matchVersionInfo+"/img/spell/"+value.id+".png";
+						getSpellData1 = "<span tooltip='" + value.name
+						+ "' flow='down' ><img src='"+searchedPlayerSpell1ImgUrl + "' style='width:25px; cursor:pointer;'></span>";
+					} else if(value.key == searchedPlayerSpell2 ) {
+						const searchedPlayerSpell2ImgUrl = "https://ddragon.leagueoflegends.com/cdn/"+matchVersionInfo+"/img/spell/"+value.id+".png";
+						getSpellData2 = "<span tooltip='" + value.name
+						+ "' flow='down' ><img src='"+searchedPlayerSpell2ImgUrl + "' style='width:25px; cursor:pointer;'></span>";
+					}
+				})
+				//return "<span tooltip='" + searchedPlyerIngameInfo.championName + "' flow='down' ><img src="+championImgUrl+" class='imgCircleRadius' style='width:40px; cursor:pointer;'></span>";
+				return getSpellData1 + getSpellData2;
+			}
+		},
+		{headerName:"KDA", field:"KDA", width:80, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -161,6 +196,11 @@
 			}
 		},
 		{headerName:"팀", field:"team", width:200, sortable:false,
+			cellStyle: function(data) {
+				return {
+					"display":"block" //span이였던 cell을 div개념으로 변경
+				};
+			},
 			cellRenderer: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
 				const searchedPlayerteamId = searchedPlyerIngameInfo.teamId;
@@ -199,7 +239,7 @@
 				return resultData;
 			}
 		},
-		{headerName:"아이템", field:"item", width:110, sortable:false,
+		{headerName:"아이템", field:"item", width:90, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -339,8 +379,7 @@
 			<div id="soloRecord" style="width: 50%;">
 				<table id="soloRecordTable">
 					<tr>
-						<td style="text-align: center;" rowspan=4><img
-							id="solotierImg"></td>
+						<td style="text-align: center;" rowspan=4><img id="solotierImg"></td>
 						<td style="text-align: center;">솔로랭크</td>
 					</tr>
 					<tr>

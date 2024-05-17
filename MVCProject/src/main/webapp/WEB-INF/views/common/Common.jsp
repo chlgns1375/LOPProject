@@ -91,6 +91,26 @@
 				return returnResult;
 			}
 			
+			//
+			function getLolAllSpellsFunc(versionNumb) {
+				const getLolCurrentVersionAllItemsUrl = 'https://ddragon.leagueoflegends.com/cdn/'+versionNumb+'/data/ko_KR/summoner.json'
+				let returnResult;
+				$.ajax({
+					url : getLolCurrentVersionAllItemsUrl,
+					type : 'get',
+					dataType:'json',
+					async: false,
+					success : function(data){
+						returnResult = data;
+					}, error : function(result) {
+						returnResult = data;
+						
+					}
+				});
+				
+				return returnResult;
+			}
+			
 			// 첫문자 대문자 변경 함수
 			function toCapitalize(str) {
 				if(str.toLocaleLowerCase() == 'fiddlesticks') {
