@@ -12,6 +12,7 @@
 	const matchIdList = jsonObj.matchIdList;
 	const matchInfoList = jsonObj.matchInfoList;
 	const recordInfoList = jsonObj.recordInfoList;
+	
 	$(document).ready(function() {
 		searchSommonerFunc();
 	});
@@ -72,7 +73,7 @@
 		}
 	}
 	const columnDefs = [
-		{headerName:"승패", field:"win", width:70, sortable:false,
+		{headerName:"승패", field:"win", width:55, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -86,7 +87,7 @@
 				return (searchedPlyerIngameInfo.win == true) ? "승" : "패";
 			}	
 		},
-		{headerName:"큐타입", field:"mapId", width:80, sortable:false,
+		{headerName:"큐타입", field:"mapId", width:70, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -108,7 +109,7 @@
 				
 			}
 		},
-		{headerName:"챔피언", field:"champion", width:80, sortable:false,
+		{headerName:"챔피언", field:"champion", width:70, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -119,18 +120,19 @@
 			},
 			cellRenderer: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
-				let championName = searchedPlyerIngameInfo.championName;
+				const championName = toCapitalize(searchedPlyerIngameInfo.championName);
 				var championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/img/champion/'+championName+'.png';
 				//return "<span tooltip='" + searchedPlyerIngameInfo.championName + "' flow='down' ><img src="+championImgUrl+" class='imgCircleRadius' style='width:40px; cursor:pointer;'></span>";
 				return "<img onclick=\"redirectUrl(\'/Champion/ChampionInfo?championInfo=" + championName + "\' );\" src="+championImgUrl+" class='imgCircleRadius' style='width:50px; cursor:pointer;'>";
 			},
 			tooltipValueGetter: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
-				return lolAllChampionsInfo.data[searchedPlyerIngameInfo.championName].name;
+				const championName = toCapitalize(searchedPlyerIngameInfo.championName);
+				return lolAllChampionsInfo.data[championName].name;
 			},
 		},
 		{headerName:"SR", field:"sr", width:60, sortable:false},
-		{headerName:"KDA", field:"KDA", width:120, sortable:false,
+		{headerName:"KDA", field:"KDA", width:100, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -161,8 +163,11 @@
 		{headerName:"팀", field:"team", width:200, sortable:false,
 			cellRenderer: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
-				const searchedPlayerteamId = searchedPlyerIngameInfo.teamId
+				const searchedPlayerteamId = searchedPlyerIngameInfo.teamId;
 				const participantsTeam = data.data.info.participants;
+				const matchVersionInfoSplit = (data.data.info.gameVersion).split('.');
+				const matchVersionInfo = matchVersionInfoSplit[0] + '.' + matchVersionInfoSplit[1] + '.' + '1';
+				
 				let resultData = '';
 				let championImgUrl = '';
 				
@@ -171,8 +176,9 @@
 				let htmlInfo = "";
 				
 				for(var i = 0; i < participantsTeam.length; i++) {
-					championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/' + lolCurrentVersionNumb + '/img/champion/'+participantsTeam[i].championName + '.png';
-					htmlInfo += "<span tooltip='" + lolAllChampionsInfo.data[participantsTeam[i].championName].name
+					const champName = toCapitalize(participantsTeam[i].championName);
+					const championImgUrl = 'https://ddragon.leagueoflegends.com/cdn/' + lolCurrentVersionNumb + '/img/champion/' + champName + '.png';
+					htmlInfo += "<span tooltip='" + lolAllChampionsInfo.data[champName].name
 						+ "' flow='down' ><img src='"+championImgUrl + "' style='width:16px; cursor:pointer;'></span>";
 					//TODO: (lolAllChampionsInfo.data[champName].name : 'Fiddlestick') != (participantsTeam[i].name : 'FiddleStick')
 					htmlInfo += "<span onclick=redirectUrl('/search/userSearchManage?summonerName="+ participantsTeam[i].riotIdGameName.replaceAll(' ', '') + 
@@ -193,7 +199,7 @@
 				return resultData;
 			}
 		},
-		{headerName:"아이템", field:"item", width:120, sortable:false,
+		{headerName:"아이템", field:"item", width:110, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -204,16 +210,25 @@
 			},
 			cellRenderer: function (data) {
 				const searchedPlyerIngameInfo = searchedInGamePlayerInfoFunc(data);
+				const matchVersionInfoSplit = (data.data.info.gameVersion).split('.');
+				const matchVersionInfo = matchVersionInfoSplit[0] + '.' + matchVersionInfoSplit[1] + '.' + '1';
+				const matchVersionItemsInfo = getLolCurrentVersionAllItemsFunc(matchVersionInfo);
+				const searchedPlyerWinChk = searchedPlyerIngameInfo.win;
 				let resultData = '';
 				for(let i = 0; searchedPlyerIngameInfo['item'+i] != undefined; i++) {
 					const itemNumb = searchedPlyerIngameInfo['item'+i];
 					if( itemNumb != 0 ) {
-						const itemImgUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/img/item/'+itemNumb+'.png';
-						constitemInfoUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/data/ko_KR/item.json'
-						const itemTag = "<span tooltip='"+lolAllItemsInfo.data[itemNumb].name+"' flow='down'><img src="+itemImgUrl+" style='width:25px; cursor:pointer;'></span> ";
+						const itemImgUrl = 'https://ddragon.leagueoflegends.com/cdn/'+matchVersionInfo+'/img/item/'+itemNumb+'.png';
+						const itemInfo = 'https://ddragon.leagueoflegends.com/cdn/'+matchVersionInfo+'/data/ko_KR/item.json'
+						const itemTag = "<span tooltip='"+matchVersionItemsInfo.data[itemNumb].name+"' flow='down'><img src="+itemImgUrl+" style='width:25px; cursor:pointer;'></span> ";
 						resultData += itemTag;
 					} else {
-						resultData += "<img style='width:25px; height:25px; background-color:#181d1f'> ";
+						if( searchedPlyerWinChk ) {
+							resultData += "<img style='width:25px; height:25px; background-color:#181d1f'> ";
+						} else {
+							resultData += "<img style='width:25px; height:25px; background-color:#59343B'> ";
+						}
+							
 					}
 					
 					if(i == 2) {
@@ -241,7 +256,7 @@
 				return searchedPlaerIngameChampLv + " / " + searchedPlaerIngamePlayerGold + " / " + searchedPlaerIngamePlayerTotalMinionKilled;
 			}
 		},
-		{headerName:"시간", field:"playtime", width:150, sortable:false,
+		{headerName:"시간", field:"playtime", width:130, sortable:false,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -363,8 +378,7 @@
 				</table>
 			</div>
 		</div>
-		<div id="myGrid" class="ag-theme-alpine-dark"
-			style="height: 1052px; width: 100%;"></div>
+		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 1052px; width: 100%;"></div>
 	</div>
 </body>
 </html>

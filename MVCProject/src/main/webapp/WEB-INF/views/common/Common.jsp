@@ -17,8 +17,8 @@
 			let lolCurrentVersionNumb = '';
 			let lolAllVersionInfo;
 			
-			let lolAllChampionsInfo = '';
-			let lolAllItemsInfo = '';
+			let lolAllChampionsInfo;
+			let lolAllItemsInfo;
 			
 			
 			getLolCurrentVersionFunc();
@@ -41,9 +41,10 @@
 					async: false,
 					success : function(result){
 						lolCurrentVersionNumb = result[0];
+						//lolCurrentVersionNumb = "14.10.1";
 						lolAllVersionInfo = result;
-						getLolCurrentVersionAllChampionsFunc();
-						getLolCurrentVersionAllItemsFunc();
+						lolAllChampionsInfo = getLolCurrentVersionAllChampionsFunc(lolCurrentVersionNumb);
+						lolAllItemsInfo = getLolCurrentVersionAllItemsFunc(lolCurrentVersionNumb);
 					}, error : function(result) {
 						
 						
@@ -52,40 +53,66 @@
 			}
 			
 			//
-			function getLolCurrentVersionAllChampionsFunc() {
-				const getLolCurrentVersionAllChampionsUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/data/ko_KR/champion.json'
+			function getLolCurrentVersionAllChampionsFunc(versionNumb) {
+				const getLolCurrentVersionAllChampionsUrl = 'https://ddragon.leagueoflegends.com/cdn/'+versionNumb+'/data/ko_KR/champion.json'
+				let returnResult;
 				$.ajax({
 					url : getLolCurrentVersionAllChampionsUrl,
 					type : 'get',
 					dataType:'json',
 					async: false,
-					success : function(result){
-						lolAllChampionsInfo = result;
-						
-					}, error : function(result) {
-						
-						
+					success : function(data){
+						returnResult = data;
+					}, error : function(data) {
+						returnResult = data;
 					}
 				});
+				
+				return returnResult;
 			}
 			
 			//
-			function getLolCurrentVersionAllItemsFunc() {
-				const getLolCurrentVersionAllItemsUrl = 'https://ddragon.leagueoflegends.com/cdn/'+lolCurrentVersionNumb+'/data/ko_KR/item.json'
+			function getLolCurrentVersionAllItemsFunc(versionNumb) {
+				const getLolCurrentVersionAllItemsUrl = 'https://ddragon.leagueoflegends.com/cdn/'+versionNumb+'/data/ko_KR/item.json'
+				let returnResult;
 				$.ajax({
 					url : getLolCurrentVersionAllItemsUrl,
 					type : 'get',
 					dataType:'json',
 					async: false,
-					success : function(result){
-						lolAllItemsInfo = result;
+					success : function(data){
+						returnResult = data;
 					}, error : function(result) {
-						
+						returnResult = data;
 						
 					}
 				});
+				
+				return returnResult;
 			}
 			
+			// 첫문자 대문자 변경 함수
+			function toCapitalize(str) {
+				if(str.toLocaleLowerCase() == 'fiddlesticks') {
+					return 'Fiddlesticks';
+				} else {
+					return str;
+				}
+				
+			}
+			
+			function textLengthOverCut(txt, len, lastTxt) {
+				if (len == "" || len == null) { // 기본값
+					len = 5;
+				}
+				if (lastTxt == "" || lastTxt == null) { // 기본값
+					lastTxt = "...";
+				}
+				if (txt.length > len) {
+					txt = txt.substr(0, len) + lastTxt;
+				}
+				return txt;
+			}
 		</script>
 	</head>
 
