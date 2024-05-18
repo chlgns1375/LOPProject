@@ -97,14 +97,16 @@
 				};
 			},
 			valueFormatter: function (data) {
-				if(data.data.info.mapId == 11) {
-					return "랭크";
-				} else if(data.data.info.mapId == 12){
+				if(data.data.info.queueId == 420) {
+					return "솔로랭크";
+				} else if(data.data.info.queueId == 440){
+					return "자유랭크";
+				} else if(data.data.info.queueId == 450){
 					return "총력전";
-				} else if(data.data.info.mapId == 30){
+				} else if(data.data.info.queueId == 1700){
 					return "아레나";
 				} else {
-					return data.data.info.mapId;
+					return data.data.info.queueId;
 				}
 				
 			}

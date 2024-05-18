@@ -49,7 +49,7 @@
 	        <i class="fas fa-hamburger"></i>
 	      </a>
 	    </nav> -->
-		<!-- 룬, 아이템, 챔피언분석, 통계, 랭킹, 패치노트 등등 -->
+		룬, 아이템, 챔피언분석, 통계, 랭킹, 패치노트 등등
 	</div>
 	<div class="searchDiv">
 		<input type="text" class="textBox" id="userNickName" onkeypress="enterkey(event);" placeholder="소환사명 + #KR1" />
