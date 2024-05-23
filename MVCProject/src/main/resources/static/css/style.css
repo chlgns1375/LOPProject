@@ -2,7 +2,7 @@
 
 body{
 	background-color:rgb(61, 60, 60);
-	color:white;
+	color:white
 }
 .bodyDiv{
 	width: 1260px;
@@ -22,7 +22,7 @@ header {
     line-height: 100px;
     background: linear-gradient(0deg, rgb(61, 60, 60), black);
     border-bottom:1px solid #68686e;
-    z-index: 20;
+    z-index: 1000;
 }
 
 section {
@@ -39,7 +39,7 @@ footer {
     background: linear-gradient(0deg, black, rgb(61, 60, 60));
     text-align: center;
     line-height: 100px;
-    z-index: 20;
+    z-index: 1000;
 }
 
 .toolbar {
@@ -91,9 +91,9 @@ footer {
 
 /* START TOOLTIP STYLES */
 [tooltip] {
-  position: relative; /* opinion 1 */
+	position: relative; /* opinion 1 */
+	overflow:visible;
 }
-
 /* Applies to all tooltips */
 [tooltip]::before,
 [tooltip]::after {
@@ -109,7 +109,6 @@ footer {
 [tooltip]::before {
   content: '';
   border: 5px solid transparent; /* opinion 4 */
-  z-index: 1001; /* absurdity 1 */
 }
 [tooltip]::after {
   content: attr(tooltip); /* magic! */
@@ -125,7 +124,7 @@ footer {
   min-width: 3em;
   max-width: 21em;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: visible;
   text-overflow: ellipsis;
   padding: 1ch 1.5ch;
   border-radius: .3ch;
@@ -325,7 +324,7 @@ h1{
 }
 
 .ag-cell-value, .ag-group-value {
-	overflow: unset;
+	overflow: visible;
 }
 
 .toolbarOptionDeco{

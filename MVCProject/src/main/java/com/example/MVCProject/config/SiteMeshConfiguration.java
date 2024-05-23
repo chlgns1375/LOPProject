@@ -25,7 +25,8 @@ public class SiteMeshConfiguration extends ConfigurableSiteMeshFilter {
 		// Map decorators to path patterns. 
                 .addDecoratorPath("/*", 	"/WEB-INF/views/common/Common.jsp")
                 // Exclude path from decoration.
-                .addExcludedPath("/html/*")
+                .addExcludedPath("/popup/*")
+                .addExcludedPath(".html")
                 .addExcludedPath(".json")
                 .addExcludedPath(".css")
                 .setMimeTypes("text/html");

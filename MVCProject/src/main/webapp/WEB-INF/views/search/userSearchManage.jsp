@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
 <title>nextPage</title>
 <script>
 	const jsonObj = ${jsonObj};
@@ -326,22 +325,46 @@
 					
 				
 			}
-		}
+		},
+		{headerName: '상세', field: 'btn', width:50, cellClass:'cell-warp-text', autoHeight:true,
+			cellStyle: function(data) {
+				return {
+					"justify-content": "center", 
+					"align-content": "center",
+					"align-items": "center",
+					"align-self": "center",
+					'white-space': 'normal'
+				};
+			},
+            cellRenderer : function(data){
+            	return "<div>" +
+					"<button value='close' onclick='dropInformationRecordTable(this); return false;'>▼</button>" +
+					"<iframe name='frm' src='/popup/teamInformationPopup?data="+encodeURIComponent(JSON.stringify(data.data))+"' style=' display:none; z-index:500; position: absolute; transform: translate(-98%, 5%); height:500px; width:1152px;' >" +
+					"</iframe>"+
+					//"<form name='frmPost' method='POST' target='frm'>"
+					//	"<input type='hidden' name='frmData' value='/popup/teamInformationPopup?data="+encodeURIComponent(JSON.stringify(data.data))+"' />" +
+					//"</form>"
+				"</div>";
+            }
+            
+        }
 	];
 
 	const gridOptions = {
 		defaultColDef:{
-			resizable: false
+			resizable: false,
+			autoHeight:true
 		},
-		rowHeight: 100, // 셀높이
+		//rowHeight: 100, // 셀높이
 		columnDefs:columnDefs,
 		rowData:matchInfoList, //렌더링될 데이터
 		tooltipShowDelay: 100, //툴팁표시 딜레이시간
 		tooltipMouseTrack:true, //커서이동시 툴팁 따라옴
-		onCellClicked:false,
+		onCellClicked:false, //셀 클릭시 이벤트
+		suppressRowTransform: true, //row의 translate기능
 		getRowStyle: params => {
 	        if (searchedInGamePlayerInfoFunc(params.node).win == false) {
-	            return { background: '#59343B' };
+	            return { background: '#59343B'};
 			} else {
 				return { background: '#181d1f'};
 			}
@@ -350,13 +373,31 @@
 			event.api.sizeColumnsToFit();
 		}
 	};
-
+	
 	// setup the grid after the page has finished loading
 	document.addEventListener('DOMContentLoaded', () => {
 	  const gridDiv = document.querySelector('#myGrid');
 	  new agGrid.Grid(gridDiv, gridOptions);
 	});
 	
+	function dropInformationRecordTable(tag) {
+		if( $(tag).val() == "close" ) {
+			$(tag).html("▲");
+			$(tag).val("open");
+			$(tag).next().css("display" ,"block");
+			
+		} else {
+			$(tag).html("▼");
+			$(tag).val("close");
+			$(tag).next().css("display" ,"none");
+		}
+		
+		
+	}
+
+	$(document).ready( function(){
+		
+	});
 </script>
 
 </head>
@@ -419,7 +460,7 @@
 				</table>
 			</div>
 		</div>
-		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 1052px; width: 100%;"></div>
+		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 1078px; width: 100%;"></div>
 	</div>
 </body>
 </html>
