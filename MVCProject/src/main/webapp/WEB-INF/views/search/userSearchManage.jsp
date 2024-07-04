@@ -72,6 +72,11 @@
 		}
 	}
 	const columnDefs = [
+		{headerName:"gameId", field:"gameId", hide:true,
+			valueFormatter: function (data) {
+				return data.data.info.gameId;
+			}	
+		},
 		{headerName:"승패", field:"win", width:50, sortable:false,
 			cellStyle: function(data) {
 				return {
@@ -326,7 +331,7 @@
 				
 			}
 		},
-		{headerName: '상세', field: 'btn', width:50, cellClass:'cell-warp-text', autoHeight:true,
+		{headerName: '상세', field: 'btn', width:50,
 			cellStyle: function(data) {
 				return {
 					"justify-content": "center", 
@@ -337,14 +342,42 @@
 				};
 			},
             cellRenderer : function(data){
-            	return "<div>" +
-					"<button value='close' onclick='dropInformationRecordTable(this); return false;'>▼</button>" +
-					"<iframe name='frm' src='/popup/teamInformationPopup?data="+encodeURIComponent(JSON.stringify(data.data))+"' style=' display:none; z-index:500; position: absolute; transform: translate(-98%, 5%); height:500px; width:1152px;' >" +
-					"</iframe>"+
-					//"<form name='frmPost' method='POST' target='frm'>"
-					//	"<input type='hidden' name='frmData' value='/popup/teamInformationPopup?data="+encodeURIComponent(JSON.stringify(data.data))+"' />" +
-					//"</form>"
-				"</div>";
+            	let cellBodyTag = document.createElement("div");
+            	let infoButtonTag = document.createElement("button");
+            	
+            	$(cellBodyTag).css("width", "100%");
+            	$(cellBodyTag).css("height", "100%");
+            	
+            	const winlossChk = searchedInGamePlayerInfoFunc(data).win;
+            	if (winlossChk == false) {
+            		$(infoButtonTag).css("background-color", "#59343B");
+    			} else {
+    				$(infoButtonTag).css("background-color", "#181d1f");
+    			}
+            	$(infoButtonTag).css("border", "none");
+            	$(infoButtonTag).css("width", "100%");
+            	$(infoButtonTag).css("height", "100%");
+            	$(infoButtonTag).text("▼");
+            	$(infoButtonTag).val("false");
+            	
+            	$(cellBodyTag).html(infoButtonTag);
+            	
+            	$(infoButtonTag).click(function() {
+            		let buttonChk = $(infoButtonTag).val();
+            		if( buttonChk == "false" ) {
+            			$(infoButtonTag).text("▲");
+                    	$(infoButtonTag).val("true");
+                    	getInfoIngameDataIframe(data);
+                    	
+            		} else {
+            			$(infoButtonTag).text("▼");
+                    	$(infoButtonTag).val("false");
+                    	iframeClose();
+            		}
+            	});
+            	
+            	
+            	return cellBodyTag;
             }
             
         }
@@ -352,14 +385,13 @@
 
 	const gridOptions = {
 		defaultColDef:{
-			resizable: false,
-			autoHeight:true
+			resizable: true
 		},
-		//rowHeight: 100, // 셀높이
+		rowHeight: 100, // 셀높이
 		columnDefs:columnDefs,
 		rowData:matchInfoList, //렌더링될 데이터
 		tooltipShowDelay: 100, //툴팁표시 딜레이시간
-		tooltipMouseTrack:true, //커서이동시 툴팁 따라옴
+		tooltipMouseTrack:true, //커서이동시 툴팁
 		onCellClicked:false, //셀 클릭시 이벤트
 		suppressRowTransform: true, //row의 translate기능
 		getRowStyle: params => {
@@ -380,24 +412,16 @@
 	  new agGrid.Grid(gridDiv, gridOptions);
 	});
 	
-	function dropInformationRecordTable(tag) {
-		if( $(tag).val() == "close" ) {
-			$(tag).html("▲");
-			$(tag).val("open");
-			$(tag).next().css("display" ,"block");
-			
-		} else {
-			$(tag).html("▼");
-			$(tag).val("close");
-			$(tag).next().css("display" ,"none");
-		}
-		
-		
+	function getInfoIngameDataIframe(data) {
+		document.frm.formData.value = JSON.stringify(data.data);
+		document.frm.submit();
 	}
-
-	$(document).ready( function(){
-		
-	});
+	
+	function iframeClose() {
+		let oFrame = document.getElementById('showFrame').contentWindow.document;
+		oFrame.open();
+		oFrame.close();
+	}
 </script>
 
 </head>
@@ -460,7 +484,11 @@
 				</table>
 			</div>
 		</div>
-		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 1078px; width: 100%;"></div>
+		<div id="myGrid" class="ag-theme-alpine-dark" style="height: 1052px; width: 100%;"></div>
+		<iframe id="showFrame" name="showFrame"  style="height: 500px; width: 100%;"></iframe>
+		<form id="frm" name="frm" method="post" target="showFrame" action="/popup/teamInformationPopup" >
+			<input type="hidden" id="formData" name="formData" />
+		</form>
 	</div>
 </body>
 </html>

@@ -310,9 +310,6 @@ h1{
 .imgCircleRadius{
 	border-radius:50%;
 }
-.ag-header-cell-label {
-	justify-content: center; 
-}
 .ag-cell, .ag-full-width-row .ag-cell-wrapper.ag-row-group {
 	display:flex;
 	--ag-internal-calculated-line-height: none;

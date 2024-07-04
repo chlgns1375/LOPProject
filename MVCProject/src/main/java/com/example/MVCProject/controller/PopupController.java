@@ -17,7 +17,7 @@ public class PopupController {
 		ModelAndView mav = new ModelAndView();
 		
 		try {
-			
+			mav.addObject("data", request.getParameter("formData") );
 			mav.setViewName("/popup/teamInformationPopup");
 		} catch(Exception e) {
 			
